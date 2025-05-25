@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EC2 Instance Details</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #0f0;
+      font-family: monospace;
+      padding: 2rem;
+    }
+
+    h1 {
+      color: #0ff;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    td, th {
+      border: 1px solid #555;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #222;
+    }
+
+    .btn {
+      margin-top: 1rem;
+      padding: 10px 15px;
+      background-color: #0f0;
+      color: black;
+      border: none;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .btn:hover {
+      background-color: #0c0;
+    }
+  </style>
+</head>
+<body>
+  <h1>EC2 Instance Details</h1>
+
+  <% if (instance) { %>
+    <table>
+      <tr><th>Property</th><th>Value</th></tr>
+      <tr><td>Instance ID</td><td><%= instance.InstanceId %></td></tr>
+      <tr><td>Instance Type</td><td><%= instance.InstanceType %></td></tr>
+      <tr><td>AMI ID</td><td><%= instance.ImageId %></td></tr>
+      <tr><td>State</td><td><%= instance.State.Name %></td></tr>
+      <tr><td>Private IP</td><td><%= instance.PrivateIpAddress %></td></tr>
+      <tr><td>Public IP</td><td id="public-ip"><%= instance.PublicIpAddress || 'N/A' %></td></tr>
+      <tr><td>Key Name</td><td><%= instance.KeyName %></td></tr>
+      <tr><td>Launch Time</td><td><%= instance.LaunchTime %></td></tr>
+      <tr><td>Availability Zone</td><td><%= instance.Placement.AvailabilityZone %></td></tr>
+      <tr><td>Tags</td><td>
+        <ul>
+          <% instance.Tags.forEach(tag => { %>
+            <li><strong><%= tag.Key %>:</strong> <%= tag.Value %></li>
+          <% }) %>
+        </ul>
+      </td></tr>
+    </table>
+
+    <!-- Buttons -->
+    <button class="btn" onclick="window.location.href='/'">🔙 Back to Search</button>
+    <button class="btn" onclick="setEC2Ip()">📂 Upload Files</button>
+
+    <script>
+      function setEC2Ip() {
+        const ip = document.getElementById('public-ip').innerText;
+        if (ip && ip !== 'N/A') {
+          localStorage.setItem('EC2_Ip', ip);
+          alert('EC2 Public IP saved to localStorage!');
+        } else {
+          alert('No public IP available to store.');
+        }
+      }
+    </script>
+
+  <% } else { %>
+    <p>Instance not found.</p>
+    <a href="/" class="btn">🔙 Back to Search</a>
+  <% } %>
+</body>
+</html>

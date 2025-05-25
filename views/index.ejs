@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>EC2 Instance Finder</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #111;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    form {
+      margin-bottom: 2rem;
+    }
+
+    input {
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+
+    button {
+      margin: 0.3rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      background-color: #0f0;
+      border: none;
+      border-radius: 5px;
+      color: #000;
+    }
+
+    h2 {
+      color: #0ff;
+    }
+  </style>
+</head>
+<body>
+  <h2>🔍 Search EC2 Instances</h2>
+  <form method="POST" action="/search">
+    <input type="text" name="prefix" placeholder="Enter prefix like 'admin'" required />
+    <button type="submit">Search</button>
+  </form>
+
+  <% if (instances && instances.length) { %>
+    <h2>Matched Instances</h2>
+    <% instances.forEach(instance => { %>
+      <form action="/ec2/<%= instance %>" method="GET" style="display:inline;">
+        <button><%= instance %></button>
+      </form>
+    <% }) %>
+  <% } else if (typeof instances !== 'undefined') { %>
+    <p>No matching instances found.</p>
+  <% } %>
+</body>
+</html>
